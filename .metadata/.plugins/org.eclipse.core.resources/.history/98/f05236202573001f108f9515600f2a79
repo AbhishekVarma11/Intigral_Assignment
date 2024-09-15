@@ -1,0 +1,5 @@
+package RestRequests;
+
+public class CreateDevicePost {
+
+}

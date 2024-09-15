@@ -1,0 +1,79 @@
+package RestRequests;
+	
+	import io.restassured.RestAssured;
+	import io.restassured.http.ContentType;
+	import io.restassured.response.Response;
+	import org.testng.Assert;
+	import org.testng.annotations.Test;
+	import com.aventstack.extentreports.ExtentReports;
+	import com.aventstack.extentreports.ExtentTest;
+	import com.aventstack.extentreports.reporter.ExtentSparkReporter;
+
+	public class CreateDevicePost {
+
+	    // Initialize Extent Report
+	    ExtentReports extent = new ExtentReports();
+	    ExtentSparkReporter spark = new ExtentSparkReporter("target/ExtentReport.html");
+
+	    @Test
+	    public void createNewDevice() {
+	        // Set Base URI
+	        RestAssured.baseURI = "https://api.restful-api.dev/objects";
+
+	        // Add Extent Report configuration
+	        extent.attachReporter(spark);
+	        ExtentTest test = extent.createTest("Create New Device Test");
+
+	        // Create JSON request body
+	        String requestBody = "{\n" +
+	                "  \"name\": \"Apple Max Pro 1TB\",\n" +
+	                "  \"data\": {\n" +
+	                "    \"year\": 2023,\n" +
+	                "    \"price\": 7999.99,\n" +
+	                "    \"CPU model\": \"Apple ARM A7\",\n" +
+	                "    \"Hard disk size\": \"1 TB\"\n" +
+	                "  }\n" +
+	                "}";
+
+	        // Send POST request and capture response
+	        Response response = RestAssured
+	                .given()
+	                .contentType(ContentType.JSON)
+	                .body(requestBody)
+	                .when()
+	                .post()
+	                .then()
+	                .assertThat()
+	                .statusCode(200)
+	                .extract()
+	                .response();
+
+	        // Extract response details
+	        String id = response.jsonPath().getString("id");
+	        String name = response.jsonPath().getString("name");
+	        String createdAt = response.jsonPath().getString("createdAt");
+	        int year = response.jsonPath().getInt("data.year");
+	        double price = response.jsonPath().getDouble("data.price");
+	        System.out.println(id+" "+name+" "+createdAt+" "+year+" "+price+" ");
+	        System.out.println(response.body().asPrettyString());
+	        try {
+	            Assert.assertNotNull(id, "ID should not be null");
+	            Assert.assertNotNull(createdAt, "createdAt should not be null");
+	            Assert.assertEquals(name, "Apple Max Pro 1TB", "Device name does not match");
+	            Assert.assertEquals(year, 2023, "Year does not match");
+	            Assert.assertEquals(price, 7999.99, "Price does not match");
+
+	            // Log pass in Extent Report
+	            test.pass("All validations passed successfully");
+	        } catch (AssertionError e) {
+	         
+	            test.fail("Test failed due to: " + e.getMessage());
+	            throw e; 
+	        }
+
+	        extent.flush();
+	    }
+	}
+
+
+

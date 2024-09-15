@@ -1,0 +1,16 @@
+package RestRequests;
+@Data
+public class Data {
+    private Integer year;
+    private Double price;
+    private String color;
+    private String capacity;
+    private String generation;
+    private String cpuModel;
+    private String hardDiskSize;
+    private String strapColour;
+    private String caseSize;
+    private String description;
+    private String screenSize;
+}
+

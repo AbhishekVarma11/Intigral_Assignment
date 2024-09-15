@@ -1,0 +1,34 @@
+package RestRequests;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class Device {
+    private String id;
+    private String name;
+    
+    // Combined Data fields
+    private Integer year;
+    private Double price;
+    private String color;
+    private String capacity;
+    private String generation;
+    private String cpuModel;
+    private String hardDiskSize;
+    private String strapColour;
+    private String caseSize;
+    private String description;
+    private String screenSize;
+
+    // Constructor for creating the device without 'id' (for POST requests)
+    public Device(String name, Integer year, Double price, String cpuModel, String hardDiskSize) {
+        this.name = name;
+        this.year = year;
+        this.price = price;
+        this.cpuModel = cpuModel;
+        this.hardDiskSize = hardDiskSize;
+    }
+}
